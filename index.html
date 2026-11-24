@@ -1,0 +1,99 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>ElderCare</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1fb;--card:#fff;--tx:#10163a;--mu:#586084;--bd:#dfe3f3;--c1:#ff4d6d;--c2:#19d3a2;--c3:#2bb3ff;--ac:#6c4cff;--hero:linear-gradient(150deg,#2a1d7a,#6c4cff 70%,#2bb3ff);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0b0e24;--card:#161a3a;--tx:#f3f5ff;--mu:#a2a9d0;--bd:#262b57}}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:'Lexend',system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:18px;display:flex;justify-content:center}
+#app{width:100%;max-width:480px;height:100%;display:flex;flex-direction:column;position:relative;background:var(--bg)}
+main{flex:1;overflow-y:auto;padding:16px 16px 24px}
+h1{font-size:28px;margin:4px 0 14px;font-weight:800}h2{font-size:20px;margin:0 0 10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:24px;padding:18px;margin-bottom:14px}
+.hero{background:var(--hero);color:#fff;border:0;border-radius:32px}
+.row{display:flex;align-items:center;gap:12px}.sp{justify-content:space-between}.mu{color:var(--mu);font-size:15px}
+.btn{border:0;border-radius:18px;padding:16px 18px;font:600 18px Lexend,sans-serif;min-height:56px;cursor:pointer;color:#fff;background:var(--ac)}
+.btn.g{background:var(--c2);color:#06281f}.btn.r{background:var(--c1)}.btn.o{background:transparent;color:var(--tx);border:2px solid var(--bd)}.btn.w{width:100%}
+.btn:focus-visible,.tab:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--c3);outline-offset:2px}
+nav{display:flex;background:var(--card);border-top:1px solid var(--bd);padding:6px 6px 8px}
+.tab{flex:1;border:0;background:none;color:var(--mu);font:600 12px Lexend,sans-serif;padding:8px 0;border-radius:16px;cursor:pointer}
+.tab span{display:block;font-size:26px}.tab.on{color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent)}
+input,select{width:100%;font:18px Lexend,sans-serif;padding:14px;border-radius:14px;border:2px solid var(--bd);background:var(--bg);color:var(--tx);margin:4px 0 10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tile{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:18px 8px;text-align:center;font-weight:600;cursor:pointer;color:var(--tx);font-size:16px;font-family:inherit}.tile span{display:block;font-size:34px}
+.pill{border-radius:99px;padding:4px 12px;font-size:14px;font-weight:600}.ok{background:#19d3a233;color:var(--c2)}.no{background:#ff4d6d33;color:var(--c1)}.wt{background:#2bb3ff33;color:var(--c3)}
+.bars{display:flex;align-items:flex-end;gap:8px;height:110px}.bars div{flex:1;border-radius:8px 8px 4px 4px;background:var(--c3)}.bars div:last-child{background:var(--c2)}
+.top{display:flex;align-items:center;gap:12px;padding:10px 14px 4px}.back{width:54px;height:54px;border-radius:50%;border:2px solid var(--bd);background:var(--card);color:var(--tx);font:800 28px Lexend,sans-serif;cursor:pointer;line-height:1}.back:focus-visible{outline:3px solid var(--c3);outline-offset:2px}.top b{font-size:20px}
+.sos{position:absolute;right:14px;bottom:92px;width:68px;height:68px;border-radius:50%;border:0;background:var(--c1);color:#fff;font:800 18px Lexend;box-shadow:0 6px 20px #ff4d6d77;cursor:pointer}
+.modal{position:absolute;inset:0;background:#000a;display:flex;align-items:flex-end;z-index:9}.modal .card{width:100%;margin:0;border-radius:28px 28px 0 0}
+.toast{position:absolute;left:16px;right:16px;top:12px;background:var(--tx);color:var(--bg);padding:14px;border-radius:16px;z-index:10;font-size:16px}
+.breath{width:120px;height:120px;border-radius:50%;background:var(--c3);margin:16px auto;animation:b 8s ease-in-out infinite}
+@keyframes b{50%{transform:scale(1.4)}}@media(prefers-reduced-motion:reduce){.breath{animation:none}}
+</style></head><body><div id="app"></div>
+<script>
+const TA={home:'முகப்பு',meds:'மருந்து',water:'தண்ணீர்',walk:'நடை',more:'மேலும்',fitness:'உடற்பயிற்சி',wellness:'நலம்',records:'பதிவுகள்',notif:'அறிவிப்புகள்',care:'பராமரிப்பாளர்',settings:'அமைப்புகள்',taken:'எடுத்தேன்',skip:'தவிர்',snooze:'பின்னர்',add:'சேர்',steps:'அடிகள்',goal:'இலக்கு',next:'அடுத்த மருந்து',score:'நல வாழ்வு மதிப்பெண்',sos:'அவசரம்'};
+const D={meds:[{id:1,n:'Metformin',d:'500 mg',t:'08:00',s:'taken'},{id:2,n:'Amlodipine',d:'5 mg',t:'13:00',s:'pending'},{id:3,n:'Vitamin D',d:'1 tablet',t:'20:00',s:'pending'}],water:0,wGoal:2000,steps:0,sGoal:5000,walks:[],ex:[],sleep:7,meals:[],rec:[{k:'BP',v:'128/82',d:'Mon'},{k:'Sugar',v:'110 mg/dL',d:'Mon'},{k:'Weight',v:'68 kg',d:'Sun'}],appt:[{n:'Dr. Meena – Heart checkup',d:'Fri 10:30 AM'}],log:[],consent:false,lang:'en',ec:{n:'Priya (Daughter)',p:'+919876543210'},cg:{n:'Priya',p:'+919876543210'}};
+let S;try{S=Object.assign({},D,JSON.parse(localStorage.getItem('ec1')||'{}'))}catch(e){S=D}
+let V='home',M=false,SOS=false,TOAST='';
+const save=()=>{try{localStorage.setItem('ec1',JSON.stringify(S))}catch(e){}};
+const t=k=>S.lang=='ta'&&TA[k]||({home:'Home',meds:'Medicines',water:'Water',walk:'Walking',more:'More',fitness:'Fitness',wellness:'Wellness',records:'Health Records',notif:'Notifications',care:'Caregiver',settings:'Settings',taken:'Taken',skip:'Skip',snooze:'Snooze',add:'Add',steps:'steps',goal:'Goal',next:'Next medicine',score:'Wellness score',sos:'SOS'})[k]||k;
+const pct=(a,b)=>Math.min(1,a/b);
+const ring=(p,c,sz,lab,ico)=>`<div style="text-align:center"><svg width="${sz}" height="${sz}" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#ffffff30" stroke-width="12"/><circle cx="50" cy="50" r="42" fill="none" stroke="${c}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${p*264} 264" transform="rotate(-90 50 50)"/><text x="50" y="60" text-anchor="middle" font-size="30">${ico}</text></svg><div style="font-size:14px;font-weight:600">${lab}</div></div>`;
+const medP=()=>S.meds.filter(m=>m.s=='taken').length/Math.max(1,S.meds.length);
+const score=()=>Math.round((medP()+pct(S.water,S.wGoal)+pct(S.steps,S.sGoal)+pct(S.ex.length,3)+pct(S.sleep,7))/5*100);
+const log=(ch,m,st)=>{S.log.unshift({t:new Date().toLocaleTimeString(),ch,m,st});S.log=S.log.slice(0,30);};
+const set=(f)=>{f();save();R()};
+const toast=m=>{TOAST=m;R();setTimeout(()=>{TOAST='';R()},2600)};
+function notify(m){if(!('Notification'in window)){log('Browser push',m,'Not supported');return}
+ if(Notification.permission=='granted'){try{new Notification('ElderCare',{body:m});log('Browser push',m,'Sent to browser (page open)')}catch(e){log('Browser push',m,'Failed')}}
+ else log('Browser push',m,'Not sent – permission '+Notification.permission)}
+setInterval(()=>{const n=new Date(),hm=n.toTimeString().slice(0,5);S.meds.forEach(m=>{if(m.t==hm&&m.s=='pending'&&n.getSeconds()<30){notify('Time for '+m.n+' '+m.d);save()}})},30000);
+const bars=(a,mx)=>`<div class="bars">${a.map(v=>`<div style="height:${Math.max(4,pct(v,mx)*100)}%"></div>`).join('')}</div><div class="row sp mu"><span>Mon</span><span>Today</span></div>`;
+const wkSteps=()=>[3200,4100,2800,5200,4600,3900,S.steps];
+const V_={
+home:()=>`<div class="card hero"><div class="mu" style="color:#ffffffb0">${new Date().toDateString()}</div><h1 style="margin:2px 0 12px">Good day 👋</h1>
+<div class="row sp">${ring(medP(),'#ff4d6d',92,t('meds'),'💊')}${ring(pct(S.water,S.wGoal),'#19d3a2',92,t('water'),'💧')}${ring(pct(S.steps,S.sGoal),'#2bb3ff',92,t('walk'),'👟')}</div>
+<div class="row sp" style="margin-top:14px"><span>${t('score')}</span><b style="font-size:34px">${score()}</b></div></div>
+${(()=>{const n=S.meds.find(m=>m.s=='pending');return `<div class="card"><div class="mu">${t('next')}</div>${n?`<h2>${n.n} · ${n.d}</h2><div class="row sp"><span>⏰ ${n.t}</span><button class="btn g" onclick="med(${n.id},'taken')">${t('taken')}</button></div>`:'<h2>All done ✅</h2>'}</div>`})()}
+<div class="grid"><div class="card"><div class="mu">${t('water')}</div><h2>${S.water} / ${S.wGoal} ml</h2></div><div class="card"><div class="mu">${t('steps')}</div><h2>${S.steps} / ${S.sGoal}</h2></div><div class="card"><div class="mu">${t('fitness')}</div><h2>${S.ex.length}/3 ✔</h2></div><div class="card"><div class="mu">Sleep</div><h2>${S.sleep} h</h2></div></div>
+<div class="card"><div class="mu">Upcoming appointment</div>${S.appt.map(a=>`<h2>📅 ${a.n}</h2><div>${a.d}</div>`).join('')}</div>`,
+meds:()=>`<h1>${t('meds')}</h1>${S.meds.map(m=>`<div class="card"><div class="row sp"><div><h2 style="margin:0">${m.n}</h2><div class="mu">${m.d} · ⏰ ${m.t}</div></div><span class="pill ${m.s=='taken'?'ok':m.s=='skipped'?'no':'wt'}">${m.s}</span></div>
+<div class="row" style="margin-top:12px"><button class="btn g" style="flex:1" onclick="med(${m.id},'taken')">${t('taken')}</button><button class="btn o" onclick="med(${m.id},'skipped')">${t('skip')}</button><button class="btn o" onclick="snz(${m.id})">${t('snooze')}</button></div></div>`).join('')}
+<div class="card"><h2>${t('add')}</h2><input id="mn" placeholder="Medicine name"><input id="md" placeholder="Dosage (e.g. 1 tablet)"><input id="mt" type="time" value="09:00"><button class="btn w" onclick="addMed()">${t('add')}</button></div>
+<div class="card"><h2>Weekly adherence <span class="mu">(sample history)</span></h2>${bars([100,67,100,100,67,100,medP()*100],100)}</div>`,
+water:()=>`<h1>${t('water')}</h1><div class="card hero" style="text-align:center">${ring(pct(S.water,S.wGoal),'#19d3a2',200,Math.max(0,S.wGoal-S.water)+' ml left','💧')}<h2 style="margin-top:8px">${S.water} / ${S.wGoal} ml</h2><button class="btn g w" style="font-size:22px" onclick="set(()=>S.water+=250)">+ 1 glass (250 ml)</button></div><button class="btn o w" onclick="set(()=>S.water=Math.max(0,S.water-250))">Undo last glass</button>`,
+walk:()=>`<h1>${t('walk')}</h1><div class="card hero" style="text-align:center">${ring(pct(S.steps,S.sGoal),'#2bb3ff',200,t('goal')+' '+S.sGoal,'👟')}<h2>${S.steps} ${t('steps')}</h2></div>
+<div class="card"><h2>Log a walk</h2><input id="ws" type="number" placeholder="Steps walked"><input id="wm" type="number" placeholder="Minutes"><button class="btn w" onclick="addWalk()">${t('add')}</button><p class="mu">Automatic step counting needs the native app or a health integration. Here, steps are entered by hand.</p></div>
+<div class="card"><h2>This week <span class="mu">(sample + today)</span></h2>${bars(wkSteps(),Math.max(S.sGoal,...wkSteps()))}</div>`,
+fitness:()=>{const L=['Seated marches – 1 min','Chair arm raises – 10 reps','Ankle circles – 10 each','Seated side stretch – 30 sec'];return `<h1>${t('fitness')}</h1><div class="card"><p class="mu">Gentle chair exercises. Ask your doctor before trying anything strenuous.</p></div>${L.map((e,i)=>`<div class="card row sp"><b>${e}</b><button class="btn ${S.ex.includes(i)?'g':'o'}" onclick="tg(${i})">${S.ex.includes(i)?'✔ Done':'Done?'}</button></div>`).join('')}`},
+wellness:()=>`<h1>${t('wellness')}</h1><div class="card"><h2>Breathe</h2><div class="breath"></div><div class="mu" style="text-align:center">Breathe in and out slowly with the circle</div></div>
+<div class="card"><h2>Sleep last night</h2><input type="number" min="0" max="14" step=".5" value="${S.sleep}" onchange="set(()=>S.sleep=+this.value)"></div>
+<div class="card"><h2>Meals today</h2>${['Breakfast','Lunch','Dinner'].map(m=>`<div class="row sp" style="margin-bottom:8px"><span>🍽 ${m}</span><button class="btn ${S.meals.includes(m)?'g':'o'}" onclick="set(()=>S.meals=S.meals.includes('${m}')?S.meals.filter(x=>x!='${m}'):[...S.meals,'${m}'])">${S.meals.includes(m)?'✔':'Ate'}</button></div>`).join('')}</div>`,
+records:()=>`<h1>${t('records')}</h1><div class="card"><select id="rk"><option>BP</option><option>Sugar</option><option>Weight</option></select><input id="rv" placeholder="Value (e.g. 120/80)"><button class="btn w" onclick="addRec()">Save reading</button></div>${S.rec.map(r=>`<div class="card row sp"><b>${r.k}</b><span>${r.v}</span><span class="mu">${r.d}</span></div>`).join('')}`,
+notif:()=>{const p='Notification'in window?Notification.permission:'unsupported';const st=[['Browser push (page open only)',p=='granted'?'Operational':'Permission: '+p,p=='granted'],['Background push when app is closed','Not configured',0],['SMS','Not configured',0],['WhatsApp Business','Not configured',0],['Backend scheduler (Supabase)','Not connected',0]];
+return `<h1>${t('notif')}</h1><div class="card"><h2>Service status</h2>${st.map(s=>`<div class="row sp" style="margin-bottom:8px"><span style="font-size:16px">${s[0]}</span><span class="pill ${s[2]?'ok':'no'}">${s[1]}</span></div>`).join('')}
+<button class="btn w" onclick="ask()">Allow browser notifications</button><br><br><button class="btn o w" onclick="notify('Test reminder from ElderCare');set(()=>0)">Send test</button></div>
+<div class="card"><h2>History</h2>${S.log.length?S.log.map(l=>`<div style="margin-bottom:8px;font-size:16px">${l.t} · ${l.ch}<div class="mu">${l.m} — ${l.st}</div></div>`).join(''):'<p class="mu">No notifications yet. Send a test above.</p>'}</div>`},
+care:()=>`<h1>${t('care')}</h1><div class="card"><div class="row sp"><b>Share my health data with ${S.cg.n}</b><button class="btn ${S.consent?'g':'o'}" onclick="set(()=>S.consent=!S.consent)">${S.consent?'On':'Off'}</button></div><p class="mu">Caregivers only see your data after you say yes.</p></div>
+${S.consent?`<div class="card"><h2>Caregiver view (preview)</h2><p>💊 Medicines taken: ${S.meds.filter(m=>m.s=='taken').length}/${S.meds.length}</p><p>⚠️ Missed: ${S.meds.filter(m=>m.s=='skipped').map(m=>m.n).join(', ')||'none'}</p><p>💧 Water: ${S.water} ml</p><p>👟 Steps: ${S.steps}</p><p>🧘 Exercises: ${S.ex.length}/4</p><p>😴 Sleep: ${S.sleep} h</p></div>`:'<div class="card"><p class="mu">🔒 Turn sharing on to preview what your caregiver sees.</p></div>'}
+<a href="tel:${S.cg.p}" class="btn g w" style="display:block;text-align:center;text-decoration:none">📞 Call ${S.cg.n}</a><p class="mu">Separate caregiver logins and alerts need the Supabase backend, which is not connected in this page.</p>`,
+settings:()=>`<h1>${t('settings')}</h1><div class="card"><h2>Language / மொழி</h2><div class="row"><button class="btn ${S.lang=='en'?'':'o'}" style="flex:1" onclick="set(()=>S.lang='en')">English</button><button class="btn ${S.lang=='ta'?'':'o'}" style="flex:1" onclick="set(()=>S.lang='ta')">தமிழ்</button></div></div>
+<div class="card"><h2>Daily goals</h2>Water (ml)<input type="number" value="${S.wGoal}" onchange="set(()=>S.wGoal=+this.value||2000)">Steps<input type="number" value="${S.sGoal}" onchange="set(()=>S.sGoal=+this.value||5000)"></div>
+<div class="card"><h2>Emergency contact</h2><input value="${S.ec.n}" onchange="set(()=>{S.ec.n=this.value;S.cg.n=this.value})"><input value="${S.ec.p}" onchange="set(()=>{S.ec.p=this.value;S.cg.p=this.value})"></div>
+<button class="btn r w" onclick="if(confirm('Reset all data?')){S=JSON.parse(JSON.stringify(D));save();R()}">Reset demo data</button>`};
+function med(id,s){set(()=>{const m=S.meds.find(x=>x.id==id);m.s=s;log('In-app',m.n+' marked '+s,'Recorded locally')})}
+function snz(id){const m=S.meds.find(x=>x.id==id);log('In-app',m.n+' snoozed 10 min','Recorded locally');toast('Snoozed 10 minutes');}
+function addMed(){const n=mn.value.trim();if(!n)return toast('Enter a medicine name');set(()=>S.meds.push({id:Date.now(),n,d:md.value||'1 dose',t:mt.value,s:'pending'}))}
+function addWalk(){const s=+ws.value||0;if(!s)return toast('Enter steps walked');set(()=>{S.steps+=s;S.walks.push({s,m:+wm.value||0})})}
+function addRec(){if(!rv.value.trim())return toast('Enter a value');set(()=>S.rec.unshift({k:rk.value,v:rv.value,d:'Today'}))}
+function tg(i){set(()=>S.ex=S.ex.includes(i)?S.ex.filter(x=>x!=i):[...S.ex,i])}
+function ask(){if(!('Notification'in window))return toast('Not supported in this browser');Notification.requestPermission().then(()=>R()).catch(()=>toast('Permission request blocked'))}
+let H=[];
+function go(v){H.push([V,M]);H=H.slice(-20);V=v;M=false;R()}
+function more(){H.push([V,M]);H=H.slice(-20);M=true;R()}
+function back(){if(SOS){SOS=false;return R()}const p=H.pop();if(p){V=p[0];M=p[1]}else{V='home';M=false}R()}
+function R(){const tabs=[['home','🏠'],['meds','💊'],['water','💧'],['walk','👟'],['more','☰']],mv=['fitness','wellness','records','notif','care','settings'],ic={fitness:'🧘',wellness:'🌿',records:'📋',notif:'🔔',care:'👪',settings:'⚙️'};
+ app.innerHTML=`${TOAST?`<div class="toast">${TOAST}</div>`:''}${(V!='home'||M)?`<header class="top"><button class="back" onclick="back()" aria-label="Back">←</button><b>${M?t('more'):t(V)}</b></header>`:''}<main>${M?`<h1>${t('more')}</h1><div class="grid">${mv.map(k=>`<button class="tile" onclick="go('${k}')"><span>${ic[k]}</span>${t(k)}</button>`).join('')}</div>`:V_[V]()}</main>
+<button class="sos" aria-label="Emergency SOS" onclick="SOS=true;R()">${t('sos')}</button>
+<nav>${tabs.map(([k,i])=>`<button class="tab ${(k=='more'?(M||mv.includes(V)):(!M&&V==k))?'on':''}" onclick="${k=='more'?'more()':`go('${k}')`}"><span>${i}</span>${t(k)}</button>`).join('')}</nav>
+${SOS?`<div class="modal"><div class="card"><h2>🚨 Emergency</h2><a class="btn r w" style="display:block;text-align:center;text-decoration:none" href="tel:${S.ec.p}" onclick="log('SOS','Call to ${S.ec.n} started','Dialer opened')">📞 Call ${S.ec.n}</a><p class="mu">Blood group: O+ · Allergy: Penicillin · Conditions: Diabetes, BP (sample info)</p><p class="mu">Automatic SOS alerts by SMS or WhatsApp are not configured, so none are sent from here.</p><button class="btn o w" onclick="SOS=false;R()">Close</button></div></div>`:''}`}
+R();
+</script></body></html>
